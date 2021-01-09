@@ -9,12 +9,12 @@
 #include <gazebo/common/common.hh>
 #include <ignition/math/Vector3.hh>
 
-#define SPEED 400
+#define SPEED 300
 
 namespace gazebo
 {
     /**
-     * \brief A custom pluging to control the Iris UAV
+     * \brief A custom plugin to control the Iris UAV
      */
 
     class CustomPlugin : public ModelPlugin
@@ -28,11 +28,11 @@ namespace gazebo
         virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         {
             // Just output a message for now
-            std::cerr << "\nThe Custom Control plugin is attached to the model" << _model->GetName() << "]\n";
+            std::cerr << "\nThe Custom Control plugin is attached to the model: " << _model->GetName() << "\n";
 
             // Listen to the update event. This event is broadcast every
             // simulation iteration.
-            this->updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&CustomPlugin::GetPose, this));
+            //this->updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&CustomPlugin::GetPose, this));
 
             // Control of one of the rotors
             if(_model->GetJointCount() == 0)
@@ -66,8 +66,17 @@ namespace gazebo
             this->world = this->model->GetWorld();
 
             // Topic and subscriber creation
-            std::string topicName = "~/" + this->model->GetName() + "/speed_command";
-            this->sub = this->node->Subscribe(topicName, &CustomPlugin::OnMsg, this);
+            std::string topicName1 = "~/" + this->model->GetName() + "/speed_command_front_right";
+            this->sub1 = this->node->Subscribe(topicName1, &CustomPlugin::OnMsg1, this);
+
+            std::string topicName2 = "~/" + this->model->GetName() + "/speed_command_back_left";
+            this->sub2 = this->node->Subscribe(topicName2, &CustomPlugin::OnMsg2, this);
+
+            std::string topicName3 = "~/" + this->model->GetName() + "/speed_command_front_left";
+            this->sub3 = this->node->Subscribe(topicName3, &CustomPlugin::OnMsg3, this);
+
+            std::string topicName4 = "~/" + this->model->GetName() + "/speed_command_back_right";
+            this->sub4 = this->node->Subscribe(topicName4, &CustomPlugin::OnMsg4, this);
         }
     private:
         physics::ModelPtr model;
@@ -83,14 +92,23 @@ namespace gazebo
         common::PID pid4;
 
         transport::NodePtr node;
-        transport::SubscriberPtr sub;
-
-        event::ConnectionPtr updateConnection;
+        transport::SubscriberPtr sub1;
+        transport::SubscriberPtr sub2;
+        transport::SubscriberPtr sub3;
+        transport::SubscriberPtr sub4;
+        // event::ConnectionPtr updateConnection;
 
     public:
-        void SetVelocity(const double &_velocity)
+        void SetVelocity(int motor, const double &_velocity)
         {
-            this->model->GetJointController()->SetVelocityTarget(this->joint1->GetScopedName(), _velocity);
+            switch (motor)
+            {
+                case 1: this->model->GetJointController()->SetVelocityTarget(this->joint1->GetScopedName(), _velocity); break;
+                case 2: this->model->GetJointController()->SetVelocityTarget(this->joint2->GetScopedName(), _velocity); break;
+                case 3: this->model->GetJointController()->SetVelocityTarget(this->joint3->GetScopedName(), _velocity); break;
+                case 4: this->model->GetJointController()->SetVelocityTarget(this->joint4->GetScopedName(), _velocity); break;
+                default: break;
+            }
         }
 
         void GetPose()
@@ -100,9 +118,21 @@ namespace gazebo
         }
 
     private:
-        void OnMsg(ConstVector3dPtr &_msg)
+        void OnMsg1(ConstVector3dPtr &_msg)
         {
-            this->SetVelocity(_msg->x()); // Publisher will send here the speed commands
+            this->model->GetJointController()->SetVelocityTarget(this->joint1->GetScopedName(), _msg->x()); // Publisher will send here the speed commands
+        }
+        void OnMsg2(ConstVector3dPtr &_msg)
+        {
+            this->model->GetJointController()->SetVelocityTarget(this->joint2->GetScopedName(), _msg->x()); // Publisher will send here the speed commands
+        }
+        void OnMsg3(ConstVector3dPtr &_msg)
+        {
+            this->model->GetJointController()->SetVelocityTarget(this->joint3->GetScopedName(), _msg->x()); // Publisher will send here the speed commands
+        }
+        void OnMsg4(ConstVector3dPtr &_msg)
+        {
+            this->model->GetJointController()->SetVelocityTarget(this->joint4->GetScopedName(), _msg->x()); // Publisher will send here the speed commands
         }
     };
     GZ_REGISTER_MODEL_PLUGIN(CustomPlugin)
