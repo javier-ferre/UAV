@@ -128,11 +128,11 @@ namespace gazebo
         }
         void OnMsg3(ConstVector3dPtr &_msg)
         {
-            this->model->GetJointController()->SetVelocityTarget(this->joint3->GetScopedName(), _msg->x()); // Publisher will send here the speed commands
+            this->model->GetJointController()->SetVelocityTarget(this->joint3->GetScopedName(), -(_msg->x())); // Publisher will send here the speed commands
         }
         void OnMsg4(ConstVector3dPtr &_msg)
         {
-            this->model->GetJointController()->SetVelocityTarget(this->joint4->GetScopedName(), _msg->x()); // Publisher will send here the speed commands
+            this->model->GetJointController()->SetVelocityTarget(this->joint4->GetScopedName(), -(_msg->x())); // Publisher will send here the speed commands
         }
     };
     GZ_REGISTER_MODEL_PLUGIN(CustomPlugin)
