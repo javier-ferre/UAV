@@ -1,0 +1,4 @@
+/home/javier/devel/gazebo/iris_custom_plugin/build/CMakeFiles/rebuild_cache.dir
+/home/javier/devel/gazebo/iris_custom_plugin/build/CMakeFiles/edit_cache.dir
+/home/javier/devel/gazebo/iris_custom_plugin/build/CMakeFiles/custom_plugin.dir
+/home/javier/devel/gazebo/iris_custom_plugin/build/CMakeFiles/publisher.dir
