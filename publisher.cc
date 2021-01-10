@@ -17,9 +17,11 @@ void my_handler (int param)
 void cb(ConstPosesStampedPtr &_msg)
 {
   gazebo::msgs::Vector3d position = _msg->pose(0).position();
-  // gazebo::msgs::Vector3d orientation = _msg->orientation();
+  gazebo::msgs::Quaternion orientation = _msg->pose(0).orientation();
+  ignition::math::Quaterniond quaternion = gazebo::msgs::ConvertIgn(orientation);
+  ignition::math::Vector3d eulerAngles = quaternion.Euler();
   std::cout << "The position is: " << position.x() << " " << position.y() << " " << position.z() << std::endl;
-  // std::cout << "The orientation is: " << orientation.x() << " " << orientation().y() << " " << orientation().z() << std::endl;
+  std::cout << "The orientation is: " << eulerAngles.X() << " " << eulerAngles.Y() << " " << eulerAngles.Z() << std::endl;
 }
 /////////////////////////////////////////////////
 
@@ -91,7 +93,7 @@ int main(int _argc, char **_argv)
     // Make sure to shut everything down.
     gazebo::client::shutdown();
 
-    std::cout << "El valor es: " << signaled << std::endl;
+    std::cout << "El código de salida: " << signaled << std::endl;
     return 0;
 
 }
