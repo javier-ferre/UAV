@@ -11,11 +11,36 @@
     <include>
       <uri>model://ground_plane</uri>
     </include>
+
     <model name="iris_custom">
-    
-    <include>
+      <include>
       <uri>model://iris_with_standoffs</uri>
-    </include>
+      </include>
+
+    <link name="gps_link">
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.15</mass>
+        <inertia>
+          <ixx>0.00001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00002</iyy>
+          <iyz>0</iyz>
+          <izz>0.00002</izz>
+        </inertia>
+      </inertial>
+      <sensor type="gps" name="gps_receiver">
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+      </sensor>
+    </link>
+
+    <joint name="gps_joint" type="fixed">
+      <child>gps_link</child>
+      <parent>iris::base_link</parent>
+    </joint>
 
     <!-- plugins -->
     <plugin name="rotor_0_blade_1" filename="libLiftDragPlugin.so">
