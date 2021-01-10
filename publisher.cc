@@ -6,12 +6,20 @@
 #include <chrono>
 #include <thread>
 
+const unsigned int MAX_SPEED = 400;
 
 /////////////////////////////////////////////////
 sig_atomic_t signaled = 0;
 void my_handler (int param)
 {
   signaled = 1;
+}
+void cb(ConstPosesStampedPtr &_msg)
+{
+  gazebo::msgs::Vector3d position = _msg->pose(0).position();
+  // gazebo::msgs::Vector3d orientation = _msg->orientation();
+  std::cout << "The position is: " << position.x() << " " << position.y() << " " << position.z() << std::endl;
+  // std::cout << "The orientation is: " << orientation.x() << " " << orientation().y() << " " << orientation().z() << std::endl;
 }
 /////////////////////////////////////////////////
 
@@ -32,6 +40,8 @@ int main(int _argc, char **_argv)
     gazebo::transport::PublisherPtr pub_front_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_front_left");
     gazebo::transport::PublisherPtr pub_back_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_right");
     gazebo::transport::PublisherPtr pub_back_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_left");
+    
+    gazebo::transport::SubscriberPtr sub = node->Subscribe("~/pose/info", cb);
 
     // Wait for a subscriber to connect to this publisher
     std::cout << "Waiting for connections..." << std::endl;
@@ -46,19 +56,18 @@ int main(int _argc, char **_argv)
     gazebo::msgs::Vector3d front_left_msg;
     gazebo::msgs::Vector3d back_right_msg;
     gazebo::msgs::Vector3d back_left_msg;
-
     unsigned int count = 0;
     bool flag = false;
 
     while (signaled == 0)
     {
-      if ((count < 400) && (flag == false))
+      if ((count < MAX_SPEED) && (flag == false))
       {
           count++;
       }
       else
       {
-          if ((flag == false) && (count >= 400)) flag = true;
+          if ((flag == false) && (count >= MAX_SPEED)) flag = true;
           else count--;
 
           if (count == 0) flag = false;
