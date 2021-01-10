@@ -12,6 +12,7 @@
       <uri>model://ground_plane</uri>
     </include>
     <model name="iris_custom">
+    
     <include>
       <uri>model://iris_with_standoffs</uri>
     </include>
