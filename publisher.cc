@@ -9,12 +9,12 @@
 const unsigned int MAX_SPEED = 400;
 
 /////////////////////////////////////////////////
-sig_atomic_t signaled = 0;
-void my_handler (int param)
+sig_atomic_t exitCode = 0;
+void ExitCallback (int param)
 {
-  signaled = 1;
+  exitCode = 1;
 }
-void cb(ConstPosesStampedPtr &_msg)
+void SubscriberCallback(ConstPosesStampedPtr &_msg)
 {
   gazebo::msgs::Vector3d position = _msg->pose(0).position();
   gazebo::msgs::Quaternion orientation = _msg->pose(0).orientation();
@@ -28,7 +28,7 @@ void cb(ConstPosesStampedPtr &_msg)
 int main(int _argc, char **_argv)
 {
     void (*prev_handler)(int);
-    prev_handler = signal(SIGINT, my_handler);
+    prev_handler = signal(SIGINT, ExitCallback);
 
     // Load gazebo as a client
     gazebo::client::setup(_argc, _argv);
@@ -43,7 +43,7 @@ int main(int _argc, char **_argv)
     gazebo::transport::PublisherPtr pub_back_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_right");
     gazebo::transport::PublisherPtr pub_back_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_left");
     
-    gazebo::transport::SubscriberPtr sub = node->Subscribe("~/pose/info", cb);
+    gazebo::transport::SubscriberPtr sub = node->Subscribe("~/pose/info", SubscriberCallback);
 
     // Wait for a subscriber to connect to this publisher
     std::cout << "Waiting for connections..." << std::endl;
@@ -61,7 +61,7 @@ int main(int _argc, char **_argv)
     unsigned int count = 0;
     bool flag = false;
 
-    while (signaled == 0)
+    while (exitCode == 0)
     {
       if ((count < MAX_SPEED) && (flag == false))
       {
@@ -93,7 +93,7 @@ int main(int _argc, char **_argv)
     // Make sure to shut everything down.
     gazebo::client::shutdown();
 
-    std::cout << "El código de salida: " << signaled << std::endl;
+    std::cout << "Exit Code: " << exitCode << std::endl;
     return 0;
 
 }
