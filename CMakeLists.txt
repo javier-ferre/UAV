@@ -13,3 +13,22 @@ target_link_libraries(custom_plugin ${GAZEBO_LIBRARIES})
 # Build the stand-alone test program
 add_executable(publisher publisher.cc)
 target_link_libraries(publisher ${GAZEBO_LIBRARIES})
+
+# Build the stand-alone test program
+add_executable(app test.cpp)
+target_link_libraries(app ${GAZEBO_LIBRARIES})
+
+add_library(platform ./platform/Platform.hpp ./platform/Platform.cpp)
+target_link_libraries(app PUBLIC platform)
+
+add_library(gps ./platform/GPS.hpp ./platform/GPS.cpp)
+target_link_libraries(app PUBLIC gps)
+
+add_library(motors ./platform/Motors.hpp ./platform/Motors.cpp)
+target_link_libraries(app PUBLIC motors)
+
+add_library(imu ./platform/IMU.hpp ./platform/IMU.cpp)
+target_link_libraries(app PUBLIC imu)
+
+add_library(controller ./controller/PID.hpp ./controller/PID.cpp)
+target_link_libraries(app PUBLIC controller)

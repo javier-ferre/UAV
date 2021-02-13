@@ -9,7 +9,7 @@
 #include <gazebo/common/common.hh>
 #include <ignition/math/Vector3.hh>
 
-#define SPEED 300
+#define SPEED 0
 
 namespace gazebo
 {
