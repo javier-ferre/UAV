@@ -23,25 +23,17 @@ if(Boost_FOUND)
     add_executable(app test.cpp)
     target_link_libraries(app ${GAZEBO_LIBRARIES})
 
-    add_library(platform ./platform/Platform.hpp ./platform/Platform.cpp)
-    target_link_libraries(app PUBLIC platform)
+    add_subdirectory(platform ./platform)
+    target_link_libraries(app gps motors imu)
+    
+    add_subdirectory(controller ./controller)
 
-    add_library(gps ./platform/GPS.hpp ./platform/GPS.cpp)
-    target_link_libraries(app PUBLIC gps)
-
-    add_library(motors ./platform/Motors.hpp ./platform/Motors.cpp)
-    target_link_libraries(app PUBLIC motors)
-
-    add_library(imu ./platform/IMU.hpp ./platform/IMU.cpp)
-    target_link_libraries(app PUBLIC imu)
-
-    add_library(controller ./controller/PID.hpp ./controller/PID.cpp)
-    target_link_libraries(app PUBLIC controller)
+    target_link_libraries(app positionController attitudeController)
 
     add_library(complementary ./estimator/ComplementaryFilter.hpp ../estimator/ComplementaryFilter.cpp)
-    target_link_libraries(app PUBLIC complementary)
+    target_link_libraries(app complementary)
 
     add_library(kalman ./estimator/KalmanFilter.hpp ../estimator/KalmanFilter.cpp)
-    target_link_libraries(app PUBLIC kalman)
+    target_link_libraries(app kalman)
 
 endif()

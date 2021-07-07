@@ -1,0 +1,5 @@
+add_library(attitudeController AttitudeController.hpp AttitudeController.cpp)
+add_library(positionController PositionController.hpp PositionController.cpp)
+add_library(pid PID.hpp PID.cpp)
+target_link_libraries(attitudeController PUBLIC pid)
+target_link_libraries(positionController PUBLIC pid)
