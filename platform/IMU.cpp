@@ -18,9 +18,9 @@ namespace IMUUtils
 
         gazebo::msgs::Quaternion orientation = _msg->orientation();
         ignition::math::Quaterniond quaternion = gazebo::msgs::ConvertIgn(orientation);
-        roll = (180*quaternion.Euler().X())/3.1416;
-        pitch = (180*quaternion.Euler().Y())/3.1416;
-        yaw = (180*quaternion.Euler().Z())/3.1416;
+        roll = (180*quaternion.Euler().X())/3.14159;
+        pitch = (180*quaternion.Euler().Y())/3.14159;
+        yaw = (180*quaternion.Euler().Z())/3.14159;
     }
 
     gazebo::transport::SubscriberPtr sub;
