@@ -4,6 +4,7 @@
 #include <boost/qvm/mat_access.hpp>
 #include <boost/qvm/map_mat_mat.hpp>
 #include <cmath>
+#include <iostream>
 
 class KalmanFilter 
 {

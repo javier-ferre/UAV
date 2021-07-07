@@ -4,6 +4,7 @@
 class IMU
 {
 private:
+
 public:
     IMU();
     double getAccelerationX();
@@ -12,8 +13,8 @@ public:
     double getGyroPitchRate();
     double getGyroRollRate();
     double getGyroYawRate();
-    double getGyroPitchAngle();
     double getGyroRollAngle();
+    double getGyroPitchAngle();
     double getGyroYawAngle();
 };
 

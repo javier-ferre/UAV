@@ -1,6 +1,7 @@
 #include "ComplementaryFilter.hpp"
 
-double ComplementaryFilter::compute(double input1, double input2)
+double ComplementaryFilter::compute(double input1, double input2, double deltaT)
 {
-    return (input1*T/(T+t))+(input2*t/(T+t));
+    double result = (input1*tau/(tau+deltaT))+(input2*deltaT/(tau+deltaT));
+    return result;
 }

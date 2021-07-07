@@ -4,6 +4,7 @@
 #include "./controller/PositionController.hpp"
 #include "./controller/AttitudeController.hpp"
 #include "./estimator/KalmanFilter.hpp"
+#include "./estimator/AttitudeEstimator.cpp"
 
 #include <chrono>
 #include <iostream>
@@ -31,6 +32,9 @@ int main(int _argc, char **_argv)
   double throttleFrontLeft = 0;
   double throttleFrontRight = 0;
 
+  const double RAD2DEG = 180/3.14159;
+
+  AttitudeEstimator attitudeEstimator;
   PositionController positionController;
   AttitudeController attitudeController;
 
@@ -62,16 +66,22 @@ int main(int _argc, char **_argv)
     boost::qvm::A20(imuMeasurements) = imuSensor.getAccelerationZ();
 
     end = std::chrono::high_resolution_clock::now();
+
     auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count();
-    EKF.compute(imuMeasurements, gpsMeasurements, elapsedTime*0.000001, (imuSensor.getGyroRollAngle())*3.14159/180, (imuSensor.getGyroPitchAngle())*3.14159/180, (imuSensor.getGyroYawAngle())*3.14159/180);
+    attitudeEstimator.compute(imuSensor.getAccelerationX(),imuSensor.getAccelerationY(),imuSensor.getAccelerationZ(),imuSensor.getGyroRollRate(),imuSensor.getGyroPitchRate(),imuSensor.getGyroYawRate(), elapsedTime*0.000001);
+    //EKF.compute(imuMeasurements, gpsMeasurements, elapsedTime*0.000001, imuSensor.getGyroRollAngle(), imuSensor.getGyroPitchAngle(), imuSensor.getGyroYawAngle());
+    EKF.compute(imuMeasurements, gpsMeasurements, elapsedTime*0.000001, attitudeEstimator.getEstimatedRollAngle(), attitudeEstimator.getEstimatedPitchAngle(), attitudeEstimator.getEstimatedYawAngle());
+    
     begin = std::chrono::high_resolution_clock::now();
 
     std::cout << "EKF = " << EKF.getEstimatedX() << ", " << EKF.getEstimatedY() << ", " << EKF.getEstimatedZ() << std::endl;
     std::cout << "GPS = " << gpsSensor.getX() << ", " << gpsSensor.getY() << ", " << gpsSensor.getZ() << std::endl;
-    std::cout << "IMU = " << imuSensor.getGyroRollAngle() << ", " << imuSensor.getGyroPitchAngle() << ", " << imuSensor.getGyroYawAngle() << std::endl;
+    std::cout << "IMU = " << (imuSensor.getGyroRollAngle())*RAD2DEG << ", " << (imuSensor.getGyroPitchAngle())*RAD2DEG << ", " << (imuSensor.getGyroYawAngle())*RAD2DEG << std::endl;
+    std::cout << "IMUe= " << (attitudeEstimator.getEstimatedRollAngle())*RAD2DEG << ", " << (attitudeEstimator.getEstimatedPitchAngle())*RAD2DEG << ", " << (attitudeEstimator.getEstimatedYawAngle())*RAD2DEG << std::endl;
+    std::cout << "Elapsed: " << elapsedTime*0.000001 << " seconds" << std::endl;
 
     positionController.compute(xSetpoint, ySetpoint, zSetpoint, EKF.getEstimatedX(), EKF.getEstimatedY(), EKF.getEstimatedZ(), rollSetpoint, pitchSetpoint, yawSetpoint, throttle);
-    attitudeController.compute(rollSetpoint, pitchSetpoint, yawSetpoint, imuSensor.getGyroRollAngle(), imuSensor.getGyroPitchAngle(), imuSensor.getGyroYawAngle(), throttleBackLeft, throttleBackRight, throttleFrontLeft, throttleFrontRight);
+    attitudeController.compute(rollSetpoint, pitchSetpoint, yawSetpoint, (imuSensor.getGyroRollAngle())*RAD2DEG, (imuSensor.getGyroPitchAngle())*RAD2DEG, (imuSensor.getGyroYawAngle())*RAD2DEG, throttleBackLeft, throttleBackRight, throttleFrontLeft, throttleFrontRight);
 
     motors.setMotorBackLeft(minThrottle+throttle+throttleBackLeft);
     motors.setMotorBackRight(minThrottle+throttle+throttleBackRight);

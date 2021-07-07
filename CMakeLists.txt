@@ -27,13 +27,9 @@ if(Boost_FOUND)
     target_link_libraries(app gps motors imu)
     
     add_subdirectory(controller ./controller)
-
     target_link_libraries(app positionController attitudeController)
 
-    add_library(complementary ./estimator/ComplementaryFilter.hpp ../estimator/ComplementaryFilter.cpp)
-    target_link_libraries(app complementary)
-
-    add_library(kalman ./estimator/KalmanFilter.hpp ../estimator/KalmanFilter.cpp)
-    target_link_libraries(app kalman)
+    add_subdirectory(estimator ./estimator)
+    target_link_libraries(app kalman attitudeEstimator)
 
 endif()

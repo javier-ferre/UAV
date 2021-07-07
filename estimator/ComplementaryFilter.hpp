@@ -3,9 +3,8 @@
 class ComplementaryFilter
 {
     private:
-        double t;
-        double T;
+        double tau;
     public:
-        ComplementaryFilter(double tau, double deltat) : t{tau}, T{deltat} {}
-        double compute(double input1, double input2);
+        ComplementaryFilter(double tau) : tau{tau} {}
+        double compute(double input1, double input2, double deltaT);
 };
