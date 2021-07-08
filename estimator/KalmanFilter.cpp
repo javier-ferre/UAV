@@ -48,7 +48,7 @@ void KalmanFilter::compute(boost::qvm::mat<float,3,1>& control, boost::qvm::mat<
     boost::qvm::A14(A) = elapsedTime;
     boost::qvm::A25(A) = elapsedTime;
 
-    boost::qvm::A30(B) = cos(pitch)*cos(yaw)+ (sin(roll)*sin(pitch)*cos(yaw)-cos(roll)*sin(yaw))*(boost::qvm::A10(control)) + (cos(roll)*sin(pitch)*cos(yaw)+sin(roll)*sin(yaw))*(boost::qvm::A20(control));
+    boost::qvm::A30(B) = cos(pitch)*cos(yaw);
     boost::qvm::A31(B) = sin(roll)*sin(pitch)*cos(yaw)-cos(roll)*sin(yaw);
     boost::qvm::A32(B) = cos(roll)*sin(pitch)*cos(yaw)+sin(roll)*sin(yaw);
     boost::qvm::A40(B) = cos(pitch)*sin(yaw);
@@ -58,7 +58,7 @@ void KalmanFilter::compute(boost::qvm::mat<float,3,1>& control, boost::qvm::mat<
     boost::qvm::A51(B) = sin(roll)*cos(pitch);
     boost::qvm::A52(B) = cos(pitch)*cos(roll);
 
-    boost::qvm::mat<float,6,1> mu_estimated = ( A*mu )+( B*control );
+    boost::qvm::mat<float,6,1> mu_estimated = ( A*mu )+( B*control*elapsedTime );
     boost::qvm::mat<float,6,6> Atr = boost::qvm::transposed(A);
     boost::qvm::mat<float,6,6> sigma_estimated = ( A*sigma*Atr ) + Qt;
     boost::qvm::mat<float,6,6> Ctr = boost::qvm::transposed(C);
