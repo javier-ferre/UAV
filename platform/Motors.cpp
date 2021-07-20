@@ -3,10 +3,10 @@
 Motors::Motors()
 {
     // Publish to the motor control topics
-    pub_front_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_front_right");
-    pub_front_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_front_left");
-    pub_back_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_right");
-    pub_back_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_left");
+    pub_front_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_front_right");
+    pub_front_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_front_left");
+    pub_back_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_back_right");
+    pub_back_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_back_left");
     
     // Wait for a subscriber to connect to this publisher
     //std::cout << "Waiting for connections..." << std::endl;

@@ -12,6 +12,5 @@
 
 * To run the simulation, run from the build directory the following:
  
-        gazebo --verbose ../worlds/custom.world
+        gazebo --verbose ../worlds/modified.world
 
-TODO: Pasar todo a radianes, usar grados solo para el controlador

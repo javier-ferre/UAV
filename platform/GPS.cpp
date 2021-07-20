@@ -64,7 +64,7 @@ namespace GPSUtils
 
 GPS::GPS()
 {
-    GPSUtils::sub = node->Subscribe("~/iris_custom/gps_link/gps_receiver", GPSUtils::GPSCallback);
+    GPSUtils::sub = node->Subscribe("~/iris/gps_link/gps_receiver", GPSUtils::GPSCallback);
 }
 
 double GPS::getLatitude()

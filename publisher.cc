@@ -38,10 +38,10 @@ int main(int _argc, char **_argv)
     node->Init();
 
     // Publish to the motor control topics
-    gazebo::transport::PublisherPtr pub_front_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_front_right");
-    gazebo::transport::PublisherPtr pub_front_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_front_left");
-    gazebo::transport::PublisherPtr pub_back_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_right");
-    gazebo::transport::PublisherPtr pub_back_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris_custom/speed_command_back_left");
+    gazebo::transport::PublisherPtr pub_front_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_front_right");
+    gazebo::transport::PublisherPtr pub_front_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_front_left");
+    gazebo::transport::PublisherPtr pub_back_right = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_back_right");
+    gazebo::transport::PublisherPtr pub_back_left = node->Advertise<gazebo::msgs::Vector3d>("~/iris/speed_command_back_left");
     
     gazebo::transport::SubscriberPtr sub = node->Subscribe("~/pose/info", SubscriberCallback);
 

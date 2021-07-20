@@ -28,7 +28,7 @@ namespace IMUUtils
 
 IMU::IMU()
 {
-    IMUUtils::sub = node->Subscribe("~/iris_custom/iris/iris/imu_link/imu_sensor/imu", IMUUtils::IMUCallback);
+    IMUUtils::sub = node->Subscribe("~/iris/imu_link/imu_sensor/imu", IMUUtils::IMUCallback);
 }
 
 double IMU::getAccelerationX()

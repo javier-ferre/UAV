@@ -16,8 +16,8 @@ if(Boost_FOUND)
     target_link_libraries(custom_plugin ${GAZEBO_LIBRARIES})
 
     # Build the stand-alone test program
-    # add_executable(publisher publisher.cc)
-    #target_link_libraries(publisher ${GAZEBO_LIBRARIES})
+    add_executable(publisher publisher.cc)
+    target_link_libraries(publisher ${GAZEBO_LIBRARIES})
 
     # Build the stand-alone test program
     add_executable(app test.cpp)
